@@ -4,6 +4,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/SupabaseClient'
+import { SimilarTickets } from './SimilarTickets'
+
 
 type TicketStatus = 'open' | 'pending' | 'closed'
 
@@ -648,7 +650,10 @@ export default function TicketDetailPage() {
               </p>
             )}
           </div>
+                  <SimilarTickets ticketId={ticket.id} />
+
         </aside>
+
       </div>
     </div>
   )
