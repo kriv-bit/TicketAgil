@@ -25,6 +25,12 @@ type TicketInsights = {
   suggested_reply: string | null
 }
 
+type IaQuota = {
+  daily_limit: number
+  used_credits: number
+  remaining_credits: number
+}
+
 export default function TicketDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -41,6 +47,10 @@ export default function TicketDetailPage() {
   const [loadingReply, setLoadingReply] = useState(false)
   const [iaError, setIaError] = useState<string | null>(null)
 
+  const [quota, setQuota] = useState<IaQuota | null>(null)
+  const [loadingQuota, setLoadingQuota] = useState(false)
+
+  // 1) Cargar ticket + insights
   useEffect(() => {
     const fetchData = async () => {
       setLoadingTicket(true)
@@ -48,7 +58,6 @@ export default function TicketDetailPage() {
       setIaError(null)
 
       try {
-        // 1. Ticket base
         const {
           data: ticketData,
           error: ticketError,
@@ -69,7 +78,6 @@ export default function TicketDetailPage() {
 
         setTicket(ticketData as Ticket)
 
-        // 2. Insights IA 
         const {
           data: insightsData,
           error: insightsError,
@@ -100,6 +108,67 @@ export default function TicketDetailPage() {
       void fetchData()
     }
   }, [ticketId])
+
+  // 2) Cargar cuota IA del usuario logueado
+  useEffect(() => {
+    const fetchQuota = async () => {
+      setLoadingQuota(true)
+      try {
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser()
+
+        if (userError) {
+          console.error('Error obteniendo user (quota):', userError)
+          setLoadingQuota(false)
+          return
+        }
+
+        if (!user) {
+          setLoadingQuota(false)
+          return
+        }
+
+        const res = await fetch('/api/ia/quota', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: user.id }),
+        })
+
+        const text = await res.text()
+        let data: any = null
+
+        try {
+          data = JSON.parse(text)
+        } catch (err) {
+          console.error('Respuesta no JSON desde /api/ia/quota:', text)
+          setLoadingQuota(false)
+          return
+        }
+
+        if (!res.ok) {
+          console.error('Error cuota IA:', data.error)
+          setLoadingQuota(false)
+          return
+        }
+
+        setQuota({
+          daily_limit: data.daily_limit,
+          used_credits: data.used_credits,
+          remaining_credits: data.remaining_credits,
+        })
+      } catch (err) {
+        console.error('Error inesperado al obtener cuota IA:', err)
+      } finally {
+        setLoadingQuota(false)
+      }
+    }
+
+    void fetchQuota()
+  }, [])
 
   const formatDate = (iso: string) => {
     const d = new Date(iso)
@@ -138,6 +207,20 @@ export default function TicketDetailPage() {
 
   const description = ticket?.description ?? ''
 
+  // Helpers para actualizar cuota localmente (para UX)
+  const decrementQuota = (cost: number) => {
+    setQuota((prev) =>
+      prev
+        ? {
+            ...prev,
+            used_credits: prev.used_credits + cost,
+            remaining_credits: Math.max(0, prev.remaining_credits - cost),
+          }
+        : prev,
+    )
+  }
+
+  // HANDLERS IA
   const handleSummarize = async () => {
     if (!ticketId) return
     setLoadingSummary(true)
@@ -148,7 +231,16 @@ export default function TicketDetailPage() {
         method: 'POST',
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data: any = null
+
+      try {
+        data = JSON.parse(text)
+      } catch (err) {
+        console.error('Respuesta no JSON desde /summary:', text)
+        setIaError('Error inesperado en el servidor al resumir el ticket.')
+        return
+      }
 
       if (!res.ok) {
         setIaError(data.error ?? 'No se pudo generar el resumen.')
@@ -165,6 +257,9 @@ export default function TicketDetailPage() {
         }),
         summary: data.summary as string,
       }))
+
+      // Esta acción cuesta 1 crédito
+      decrementQuota(1)
     } catch (err) {
       console.error(err)
       setIaError('Error inesperado al resumir el ticket.')
@@ -183,7 +278,16 @@ export default function TicketDetailPage() {
         method: 'POST',
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data: any = null
+
+      try {
+        data = JSON.parse(text)
+      } catch (err) {
+        console.error('Respuesta no JSON desde /classify:', text)
+        setIaError('Error inesperado en el servidor al clasificar el ticket.')
+        return
+      }
 
       if (!res.ok) {
         setIaError(data.error ?? 'No se pudo clasificar el ticket.')
@@ -201,6 +305,9 @@ export default function TicketDetailPage() {
         category: data.category as string,
         severity: data.severity as string,
       }))
+
+      // Clasificar = 1 crédito
+      decrementQuota(1)
     } catch (err) {
       console.error(err)
       setIaError('Error inesperado al clasificar el ticket.')
@@ -219,7 +326,16 @@ export default function TicketDetailPage() {
         method: 'POST',
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data: any = null
+
+      try {
+        data = JSON.parse(text)
+      } catch (err) {
+        console.error('Respuesta no JSON desde /suggest-reply:', text)
+        setIaError('Error inesperado en el servidor al generar la respuesta.')
+        return
+      }
 
       if (!res.ok) {
         setIaError(data.error ?? 'No se pudo generar la respuesta.')
@@ -236,6 +352,9 @@ export default function TicketDetailPage() {
         }),
         suggested_reply: data.suggested_reply as string,
       }))
+
+      // Respuesta sugerida = 2 créditos
+      decrementQuota(2)
     } catch (err) {
       console.error(err)
       setIaError('Error inesperado al generar la respuesta.')
@@ -289,18 +408,26 @@ export default function TicketDetailPage() {
             {renderStatusBadge(ticket.status)}
             <span className="h-1 w-1 rounded-full bg-slate-700" />
             <span>
-              Creado: <span className="text-slate-200">{formatDate(ticket.created_at)}</span>
+              Creado:{' '}
+              <span className="text-slate-200">
+                {formatDate(ticket.created_at)}
+              </span>
             </span>
             <span className="h-1 w-1 rounded-full bg-slate-700" />
             <span>
-              Actualizado: <span className="text-slate-200">{formatDate(ticket.updated_at)}</span>
+              Actualizado:{' '}
+              <span className="text-slate-200">
+                {formatDate(ticket.updated_at)}
+              </span>
             </span>
             {ticket.customer_name && (
               <>
                 <span className="h-1 w-1 rounded-full bg-slate-700" />
                 <span>
                   Cliente:{' '}
-                  <span className="text-slate-200">{ticket.customer_name}</span>
+                  <span className="text-slate-200">
+                    {ticket.customer_name}
+                  </span>
                 </span>
               </>
             )}
@@ -315,6 +442,24 @@ export default function TicketDetailPage() {
             Resúmenes, clasificación y respuesta sugerida para que puedas
             responder más rápido y con mejor contexto.
           </p>
+
+          {/* Créditos IA */}
+          <div className="mt-3 flex items-center justify-between gap-2">
+            <span className="text-[11px] text-slate-500">
+              Créditos de IA hoy
+            </span>
+            {quota ? (
+              <span className="text-[11px] font-semibold text-sky-300">
+                {quota.remaining_credits} / {quota.daily_limit}
+              </span>
+            ) : loadingQuota ? (
+              <span className="text-[11px] text-slate-500">
+                Cargando…
+              </span>
+            ) : (
+              <span className="text-[11px] text-slate-500">—</span>
+            )}
+          </div>
         </div>
       </div>
 
