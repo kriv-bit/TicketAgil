@@ -85,9 +85,7 @@ export default function SettingsPage() {
 
       const { data, error } = await supabase
         .from('user_settings')
-        .select(
-          'company_name, default_tone, language, reply_guidelines',
-        )
+        .select('company_name, default_tone, language, reply_guidelines')
         .eq('user_id', user.id)
         .maybeSingle()
 
@@ -106,7 +104,10 @@ export default function SettingsPage() {
           company_name: data.company_name ?? '',
           default_tone: data.default_tone ?? 'neutral',
           language: data.language ?? 'es',
-          reply_guidelines: data.reply_guidelines ?? '',
+          // 🔸 Normalizamos por si vienen solo espacios/enters
+          reply_guidelines: (data.reply_guidelines ?? '').trim().length
+            ? (data.reply_guidelines ?? '')
+            : '',
         })
       }
 
@@ -121,8 +122,19 @@ export default function SettingsPage() {
   }
 
   const handleGuidelinesChange = (value: string) => {
-    const trimmed = value.slice(0, MAX_GUIDELINES_CHARS)
-    handleChange('reply_guidelines', trimmed)
+    // Respetamos el límite de caracteres
+    const limited = value.slice(0, MAX_GUIDELINES_CHARS)
+
+    // Si el contenido "real" (sin espacios/enters) está vacío,
+    // lo tratamos como string vacío para que:
+    // - El placeholder se muestre
+    // - El contador marque 0
+    const normalized =
+      limited.trim().length === 0
+        ? ''
+        : limited
+
+    handleChange('reply_guidelines', normalized)
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -143,20 +155,24 @@ export default function SettingsPage() {
       return
     }
 
+    // También normalizamos aquí por si acaso
+    const normalizedGuidelines =
+      form.reply_guidelines.trim().length === 0
+        ? null
+        : form.reply_guidelines.slice(0, MAX_GUIDELINES_CHARS)
+
     const payload = {
       user_id: user.id,
       company_name: form.company_name || null,
       default_tone: form.default_tone || null,
       language: form.language || null,
-      reply_guidelines: form.reply_guidelines || null,
+      reply_guidelines: normalizedGuidelines,
       updated_at: new Date().toISOString(),
     }
 
-    const { error } = await supabase
-      .from('user_settings')
-      .upsert(payload, {
-        onConflict: 'user_id',
-      })
+    const { error } = await supabase.from('user_settings').upsert(payload, {
+      onConflict: 'user_id',
+    })
 
     if (error) {
       console.error('Error guardando settings:', error)
@@ -168,6 +184,11 @@ export default function SettingsPage() {
     setSuccessMessage('Configuración guardada correctamente.')
     setSaving(false)
   }
+
+  // Contador de caracteres basado en el valor normalizado
+  const guidelinesLength = form.reply_guidelines
+    ? form.reply_guidelines.length
+    : 0
 
   return (
     <div className="space-y-6">
@@ -192,10 +213,7 @@ export default function SettingsPage() {
           <span className="text-sm">Cargando configuración...</span>
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 max-w-3xl text-sm"
-        >
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl text-sm">
           {/* MENSAJES */}
           {errorMessage && (
             <div className="rounded-xl border border-rose-500/50 bg-rose-500/15 px-4 py-2 text-sm text-rose-50">
@@ -216,8 +234,8 @@ export default function SettingsPage() {
                   Identidad de la empresa
                 </h2>
                 <p className="text-sm text-slate-400">
-                  Cómo se llama tu producto/empresa. La IA lo usará al
-                  redactar respuestas.
+                  Cómo se llama tu producto/empresa. La IA lo usará al redactar
+                  respuestas.
                 </p>
               </div>
             </div>
@@ -235,9 +253,7 @@ export default function SettingsPage() {
                 className="w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 py-2.5 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
                 placeholder="Ej: TicketSense, Acme Support, Mi SaaS, etc."
                 value={form.company_name}
-                onChange={(e) =>
-                  handleChange('company_name', e.target.value)
-                }
+                onChange={(e) => handleChange('company_name', e.target.value)}
               />
             </div>
           </section>
@@ -251,8 +267,8 @@ export default function SettingsPage() {
                 </h2>
                 <p className="text-sm text-slate-400 max-w-md">
                   Define cómo debe sonar tu equipo de soporte. El tono se
-                  reflejará en las respuestas sugeridas; el idioma define en
-                  qué idioma responder por defecto.
+                  reflejará en las respuestas sugeridas; el idioma define en qué
+                  idioma responder por defecto.
                 </p>
               </div>
 
@@ -268,9 +284,7 @@ export default function SettingsPage() {
                     id="language"
                     className="w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 py-2.5 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
                     value={form.language}
-                    onChange={(e) =>
-                      handleChange('language', e.target.value)
-                    }
+                    onChange={(e) => handleChange('language', e.target.value)}
                   >
                     {LANGUAGE_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -311,9 +325,7 @@ export default function SettingsPage() {
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() =>
-                    handleChange('default_tone', opt.value)
-                  }
+                  onClick={() => handleChange('default_tone', opt.value)}
                   className={`flex flex-col items-start rounded-xl border px-3 py-2.5 text-left text-sm transition ${
                     form.default_tone === opt.value
                       ? 'border-sky-500/80 bg-sky-500/15 text-sky-100'
@@ -365,14 +377,11 @@ export default function SettingsPage() {
                   '- Firma siempre como “Equipo de soporte”.'
                 }
                 value={form.reply_guidelines}
-                onChange={(e) =>
-                  handleGuidelinesChange(e.target.value)
-                }
+                onChange={(e) => handleGuidelinesChange(e.target.value)}
               />
               <div className="flex items-center justify-end text-xs text-slate-500">
                 <span>
-                  {form.reply_guidelines.length}/{MAX_GUIDELINES_CHARS}{' '}
-                  caracteres
+                  {guidelinesLength}/{MAX_GUIDELINES_CHARS} caracteres
                 </span>
               </div>
             </div>

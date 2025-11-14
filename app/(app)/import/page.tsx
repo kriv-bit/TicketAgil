@@ -254,10 +254,7 @@ export default function ImportPage() {
               </span>
               ).
             </li>
-            <li>
-              Si el CSV es muy grande, en v2 puedes mover esto a un endpoint
-              backend y procesar en background 🔄.
-            </li>
+
           </ul>
         </aside>
       </div>
