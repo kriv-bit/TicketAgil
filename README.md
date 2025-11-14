@@ -10,13 +10,13 @@ Construido con:
 - **TypeScript**
 - **Tailwind CSS**
 - **Supabase (Auth + DB + RLS)**
-- **Groq (LLMs gratis)**
+- **Groq (LLMs en capa gratuita)**
 
 ---
 
 ## ✨ Demo
+<img width="1575" height="740" alt="DashBoardTicketAgil" src="https://github.com/user-attachments/assets/b0449774-99d8-400b-a129-f12347cc47a8" />
 
-> _Aquí pon un GIF o screenshots cuando puedas_
 
 - Pantalla de login / registro
 - Importar CSV de tickets
