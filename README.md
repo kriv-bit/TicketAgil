@@ -135,7 +135,7 @@ Equipos de soporte se encuentran con:
 
 ### IA + créditos con Groq
 
-- Uso de **Groq** (modelos LLaMA) en modo gratis:
+- Uso de **Groq** (modelos LLaMA) en capa gratuita:
   - `llama-3.1-8b-instant` para las respuestas sugeridas (configurable).
 - Tabla `ia_usage`:
   - `user_id`
@@ -235,7 +235,7 @@ Hecho por **Kevin Rivera (@kevinorlandorivera0)**
 ## 📝 Roadmap (ideas futuras)
 
 - Embeddings reales para similitud de tickets.
-- Integración con Zendesk / Intercom.
-- Webhooks / colas para procesar tickets grandes.
+- Integración con Zendesk.
+- Colas para procesar tickets grandes.
 - Roles (admin vs agente).
 - Evaluar calidad de respuestas IA con feedback del agente.
