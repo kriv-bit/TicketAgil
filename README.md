@@ -226,10 +226,6 @@ Todas las tablas principales tienen **Row Level Security** activado:
 - `user_settings`: solo su propia configuración.
 
 
-## 👤 Autor
-
-Hecho por **Kevin Rivera (@kevinorlandorivera0)**  
-
 ---
 
 ## 📝 Roadmap (ideas futuras)
