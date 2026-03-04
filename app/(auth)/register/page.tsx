@@ -1,270 +1,66 @@
-// app/(auth)/register/page.tsx
 'use client'
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/SupabaseClient'
 
-type PasswordChecks = {
-  meetsLength: boolean
-  hasLower: boolean
-  hasUpper: boolean
-  hasNumber: boolean
-  hasSymbol: boolean
-  passedChecks: number
-}
-
-const getPasswordChecks = (password: string): PasswordChecks => {
-  const meetsLength = password.length >= 8
-  const hasLower = /[a-z]/.test(password)
-  const hasUpper = /[A-Z]/.test(password)
-  const hasNumber = /[0-9]/.test(password)
-  const hasSymbol = /[^A-Za-z0-9]/.test(password)
-
-  const passedChecks = [meetsLength, hasLower, hasUpper, hasNumber, hasSymbol].filter(
-    Boolean
-  ).length
-
-  return {
-    meetsLength,
-    hasLower,
-    hasUpper,
-    hasNumber,
-    hasSymbol,
-    passedChecks,
-  }
-}
-
 export default function RegisterPage() {
   const router = useRouter()
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
-  const passwordChecks = getPasswordChecks(password)
-  const passwordsMatch = !confirmPassword || password === confirmPassword
-
-  let strengthLabel = 'Introduce una contraseña'
-  let strengthBarClass = 'w-0 bg-slate-200'
-  let strengthTextClass = 'text-slate-500'
-
-  if (password) {
-    if (passwordChecks.passedChecks <= 2) {
-      strengthLabel = 'Contraseña débil'
-      strengthBarClass = 'w-1/4 bg-red-500'
-      strengthTextClass = 'text-red-600'
-    } else if (passwordChecks.passedChecks === 3) {
-      strengthLabel = 'Contraseña aceptable'
-      strengthBarClass = 'w-2/4 bg-amber-500'
-      strengthTextClass = 'text-amber-600'
-    } else if (passwordChecks.passedChecks === 4) {
-      strengthLabel = 'Contraseña fuerte'
-      strengthBarClass = 'w-3/4 bg-emerald-500'
-      strengthTextClass = 'text-emerald-600'
-    } else if (passwordChecks.passedChecks === 5) {
-      strengthLabel = 'Contraseña muy fuerte'
-      strengthBarClass = 'w-full bg-emerald-600'
-      strengthTextClass = 'text-emerald-700'
-    }
-  }
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     setError(null)
     setSuccess(null)
-    setIsSubmitting(true)
-
-    // Validaciones de front antes de llamar a Supabase
-    const { passedChecks } = getPasswordChecks(password)
-
-    if (password !== confirmPassword) {
-      setIsSubmitting(false)
-      setError('Las contraseñas no coinciden.')
-      return
-    }
-
-    if (passedChecks < 3) {
-      setIsSubmitting(false)
-      setError(
-        'La contraseña es demasiado débil. Usa al menos 8 caracteres y combina mayúsculas, minúsculas, números y símbolos.'
-      )
-      return
-    }
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: { full_name: name },
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     })
 
-    setIsSubmitting(false)
-
-    if (error) {
-      setError(error.message)
-      return
-    }
-
-    setSuccess('Registro exitoso. Revisa tu correo para confirmar la cuenta.')
-    setPassword('')
-    setConfirmPassword('')
+    setLoading(false)
+    if (error) return setError(error.message)
+    setSuccess('Cuenta creada. Revisa tu correo para confirmar el acceso.')
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-1 text-center">Crear cuenta</h1>
-      <p className="text-sm text-gray-500 mb-6 text-center">
-        TicketAgil – Copilot de soporte al cliente
-      </p>
+    <div className="fade-in space-y-6 text-slate-100">
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">Crear cuenta</h1>
+        <p className="mt-2 text-sm text-slate-400">Empieza a gestionar tu operación de soporte con TicketAgil.</p>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* EMAIL */}
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            className="w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu-correo@ejemplo.com"
-          />
+        <div className="space-y-2">
+          <label htmlFor="name" className="text-sm text-slate-300">Nombre</label>
+          <input id="name" className="input" value={name} onChange={(e) => setName(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm text-slate-300">Email</label>
+          <input id="email" type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="password" className="text-sm text-slate-300">Contraseña</label>
+          <input id="password" type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
         </div>
 
-        {/* PASSWORD */}
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="password">
-            Contraseña
-          </label>
-          <input
-            id="password"
-            type="password"
-            required
-            minLength={8}
-            className="w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Mínimo 8 caracteres"
-          />
+        {error && <p className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">{error}</p>}
+        {success && <p className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">{success}</p>}
 
-          {/* Barra de fuerza */}
-          <div className="mt-2">
-            <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-              <div className={`h-full rounded-full transition-all ${strengthBarClass}`} />
-            </div>
-            <p className={`mt-1 text-xs font-medium ${strengthTextClass}`}>{strengthLabel}</p>
-          </div>
-
-          {/* Checklist de requisitos */}
-          <ul className="mt-2 space-y-1 text-xs text-slate-600">
-            <li
-              className={
-                'flex items-center gap-1 ' +
-                (passwordChecks.meetsLength ? 'text-emerald-600' : 'text-slate-500')
-              }
-            >
-              <span>•</span>
-              <span>Mínimo 8 caracteres</span>
-            </li>
-            <li
-              className={
-                'flex items-center gap-1 ' +
-                (passwordChecks.hasLower ? 'text-emerald-600' : 'text-slate-500')
-              }
-            >
-              <span>•</span>
-              <span>Al menos una letra minúscula</span>
-            </li>
-            <li
-              className={
-                'flex items-center gap-1 ' +
-                (passwordChecks.hasUpper ? 'text-emerald-600' : 'text-slate-500')
-              }
-            >
-              <span>•</span>
-              <span>Al menos una letra mayúscula</span>
-            </li>
-            <li
-              className={
-                'flex items-center gap-1 ' +
-                (passwordChecks.hasNumber ? 'text-emerald-600' : 'text-slate-500')
-              }
-            >
-              <span>•</span>
-              <span>Al menos un número</span>
-            </li>
-            <li
-              className={
-                'flex items-center gap-1 ' +
-                (passwordChecks.hasSymbol ? 'text-emerald-600' : 'text-slate-500')
-              }
-            >
-              <span>•</span>
-              <span>Al menos un símbolo (!@#$%^&amp;*)</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* CONFIRM PASSWORD */}
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="confirm-password">
-            Confirmar contraseña
-          </label>
-          <input
-            id="confirm-password"
-            type="password"
-            required
-            className={`w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:border-sky-500 ${
-              confirmPassword && !passwordsMatch
-                ? 'border-red-500 focus:ring-red-500'
-                : 'focus:ring-sky-500'
-            }`}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Repite tu contraseña"
-          />
-          {confirmPassword && !passwordsMatch && (
-            <p className="mt-1 text-xs text-red-600">Las contraseñas no coinciden.</p>
-          )}
-        </div>
-
-        {/* MENSAJES DE ERROR / ÉXITO */}
-        {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
-            {error}
-          </p>
-        )}
-
-        {success && (
-          <p className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-md px-3 py-2">
-            {success}
-          </p>
-        )}
-
-        {/* BOTÓN */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-md bg-sky-600 text-white py-2 text-sm font-medium hover:bg-sky-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Creando cuenta...' : 'Registrarse'}
-        </button>
+        <button type="submit" className="btn btn-primary w-full" disabled={loading}>{loading ? 'Creando cuenta...' : 'Crear cuenta'}</button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-gray-600">
-        ¿Ya tienes cuenta?{' '}
-        <button
-          type="button"
-          onClick={() => router.push('/login')}
-          className="text-sky-600 hover:underline font-medium"
-        >
-          Inicia sesión
-        </button>
-      </p>
+      <button onClick={() => router.push('/login')} className="text-xs text-sky-300 transition hover:text-sky-200">Ya tengo cuenta</button>
     </div>
   )
 }

@@ -182,11 +182,11 @@ export default function TicketDetailPage() {
 
   const renderStatusBadge = (status: TicketStatus) => {
     const base =
-      'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium'
+      'inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-[11px] font-medium'
     if (status === 'open') {
       return (
         <span className={`${base} bg-emerald-500/10 text-emerald-200 border border-emerald-500/40`}>
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          <span className="h-1.5 w-1.5 rounded-md bg-emerald-400" />
           Abierto
         </span>
       )
@@ -194,14 +194,14 @@ export default function TicketDetailPage() {
     if (status === 'pending') {
       return (
         <span className={`${base} bg-amber-500/10 text-amber-200 border border-amber-500/40`}>
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+          <span className="h-1.5 w-1.5 rounded-md bg-amber-400" />
           Pendiente
         </span>
       )
     }
     return (
       <span className={`${base} bg-slate-600/20 text-slate-200 border border-slate-500/60`}>
-        <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+        <span className="h-1.5 w-1.5 rounded-md bg-slate-300" />
         Cerrado
       </span>
     )
@@ -368,7 +368,7 @@ export default function TicketDetailPage() {
   if (loadingTicket) {
     return (
       <div className="flex h-[60vh] items-center justify-center text-slate-400">
-        <span className="mr-2 h-4 w-4 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
+        <span className="mr-2 h-4 w-4 rounded-md border-2 border-slate-600 border-t-transparent animate-spin" />
         Cargando ticket...
       </div>
     )
@@ -392,7 +392,7 @@ export default function TicketDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
@@ -408,14 +408,14 @@ export default function TicketDetailPage() {
           </h1>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-400">
             {renderStatusBadge(ticket.status)}
-            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="h-1 w-1 rounded-md bg-slate-700" />
             <span>
               Creado:{' '}
               <span className="text-slate-200">
                 {formatDate(ticket.created_at)}
               </span>
             </span>
-            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <span className="h-1 w-1 rounded-md bg-slate-700" />
             <span>
               Actualizado:{' '}
               <span className="text-slate-200">
@@ -424,7 +424,7 @@ export default function TicketDetailPage() {
             </span>
             {ticket.customer_name && (
               <>
-                <span className="h-1 w-1 rounded-full bg-slate-700" />
+                <span className="h-1 w-1 rounded-md bg-slate-700" />
                 <span>
                   Cliente:{' '}
                   <span className="text-slate-200">
@@ -490,7 +490,7 @@ export default function TicketDetailPage() {
                 <h2 className="text-sm font-semibold text-emerald-100">
                   Respuesta sugerida (IA)
                 </h2>
-                <span className="text-[11px] text-emerald-200 bg-emerald-500/20 rounded-full px-2 py-0.5">
+                <span className="text-[11px] text-emerald-200 bg-emerald-500/20 rounded-md px-2 py-0.5">
                   Editable
                 </span>
               </div>
@@ -543,10 +543,10 @@ export default function TicketDetailPage() {
                 type="button"
                 disabled={loadingSummary || !description}
                 onClick={handleSummarize}
-                className="inline-flex items-center gap-1 rounded-full border border-sky-500/60 bg-sky-500/10 px-3 py-1.5 text-[11px] font-medium text-sky-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-500/20 transition"
+                className="inline-flex items-center gap-1 rounded-md border border-sky-500/60 bg-sky-500/10 px-3 py-1.5 text-[11px] font-medium text-sky-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-500/20 transition"
               >
                 {loadingSummary && (
-                  <span className="h-3 w-3 rounded-full border-2 border-sky-200 border-t-transparent animate-spin" />
+                  <span className="h-3 w-3 rounded-md border-2 border-sky-200 border-t-transparent animate-spin" />
                 )}
                 {loadingSummary ? 'Resumiendo...' : 'Resumir ticket'}
               </button>
@@ -585,22 +585,22 @@ export default function TicketDetailPage() {
                 type="button"
                 disabled={loadingClassify || !description}
                 onClick={handleClassify}
-                className="inline-flex items-center gap-1 rounded-full border border-violet-500/60 bg-violet-500/10 px-3 py-1.5 text-[11px] font-medium text-violet-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-violet-500/20 transition"
+                className="inline-flex items-center gap-1 rounded-md border border-violet-500/60 bg-violet-500/10 px-3 py-1.5 text-[11px] font-medium text-violet-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-violet-500/20 transition"
               >
                 {loadingClassify && (
-                  <span className="h-3 w-3 rounded-full border-2 border-violet-200 border-t-transparent animate-spin" />
+                  <span className="h-3 w-3 rounded-md border-2 border-violet-200 border-t-transparent animate-spin" />
                 )}
                 {loadingClassify ? 'Clasificando...' : 'Clasificar ticket'}
               </button>
             </div>
             <div className="flex flex-wrap gap-2 text-xs">
-              <div className="rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 inline-flex items-center gap-2">
+              <div className="rounded-md border border-slate-700 bg-slate-900/80 px-3 py-1 inline-flex items-center gap-2">
                 <span className="text-slate-400">Categoría</span>
                 <span className="font-mono text-[11px] text-slate-100">
                   {insights?.category ?? '—'}
                 </span>
               </div>
-              <div className="rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 inline-flex items-center gap-2">
+              <div className="rounded-md border border-slate-700 bg-slate-900/80 px-3 py-1 inline-flex items-center gap-2">
                 <span className="text-slate-400">Severidad</span>
                 <span className="font-mono text-[11px] text-slate-100">
                   {insights?.severity ?? '—'}
@@ -634,10 +634,10 @@ export default function TicketDetailPage() {
                 type="button"
                 disabled={loadingReply || !description}
                 onClick={handleSuggestReply}
-                className="inline-flex items-center gap-1 rounded-full border border-emerald-500/60 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-medium text-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/20 transition"
+                className="inline-flex items-center gap-1 rounded-md border border-emerald-500/60 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-medium text-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/20 transition"
               >
                 {loadingReply && (
-                  <span className="h-3 w-3 rounded-full border-2 border-emerald-200 border-t-transparent animate-spin" />
+                  <span className="h-3 w-3 rounded-md border-2 border-emerald-200 border-t-transparent animate-spin" />
                 )}
                 {loadingReply ? 'Generando...' : 'Sugerir respuesta'}
               </button>

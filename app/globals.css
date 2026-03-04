@@ -1,26 +1,211 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #070b14;
+  --bg-elevated: #0f172a;
+  --bg-soft: #111c33;
+  --surface: #13213d;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --primary: #38bdf8;
+  --primary-strong: #0ea5e9;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #f43f5e;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+
+  --shadow-soft: 0 10px 30px rgba(2, 6, 23, 0.2);
+  --shadow-md: 0 22px 40px rgba(2, 6, 23, 0.34);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: color-mix(in srgb, #334155 60%, transparent);
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 8% -5%, rgba(56, 189, 248, 0.15), transparent 34%),
+    radial-gradient(circle at 90% 0%, rgba(99, 102, 241, 0.17), transparent 30%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), Inter, Arial, Helvetica, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 36%, transparent);
+}
+
+.app-shell {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(7, 11, 20, 0.95));
+}
+
+.surface {
+  border: 1px solid color-mix(in srgb, #64748b 30%, transparent);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.55));
+  box-shadow: var(--shadow-soft);
+}
+
+.card-hover {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), border-color 260ms ease, box-shadow 260ms ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.btn {
+  border-radius: var(--radius-md);
+  padding: 0.62rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 220ms ease;
+}
+.btn:focus-visible,
+.input:focus-visible,
+.select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+.btn-primary {
+  background: linear-gradient(130deg, var(--primary-strong), #0284c7);
+  color: white;
+}
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-secondary {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: var(--text);
+}
+.btn-secondary:hover { background: rgba(30, 41, 59, 0.82); }
+
+.input,
+.select {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text);
+  padding: 0.62rem 0.85rem;
+  transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+.input::placeholder,
+textarea::placeholder { color: #64748b; }
+
+.segmented {
+  display: inline-flex;
+  gap: 0.3rem;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  padding: 0.25rem;
+  background: rgba(15, 23, 42, 0.62);
+}
+.segmented button {
+  border-radius: 12px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  transition: all 220ms ease;
+}
+.segmented button.active {
+  color: white;
+  background: rgba(56, 189, 248, 0.22);
+}
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  font-size: 0.67rem;
+  line-height: 1;
+  padding: 0.34rem 0.52rem;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.motion-lift {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease, border-color 260ms ease;
+}
+.motion-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.motion-press { transition: transform 180ms ease; }
+.motion-press:active { transform: translateY(1px) scale(0.99); }
+
+.tab-panel {
+  animation: tabReveal 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.toast-in {
+  animation: toastIn 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.progress-indeterminate {
+  position: relative;
+  overflow: hidden;
+}
+.progress-indeterminate::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(56,189,248,.7), transparent);
+  animation: sweep 1.2s ease-in-out infinite;
+}
+
+.fade-in {
+  animation: fadeIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(30,41,59,.9), rgba(51,65,85,.55), rgba(30,41,59,.9));
+  background-size: 180% 100%;
+  animation: shimmer 1.35s linear infinite;
+}
+@keyframes shimmer {
+  to { background-position: -180% 0; }
+}
+
+@keyframes tabReveal {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes sweep {
+  to { left: 110%; }
 }

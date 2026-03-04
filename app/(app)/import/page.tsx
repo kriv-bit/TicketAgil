@@ -144,7 +144,7 @@ export default function ImportPage() {
   const isImporting = importState === 'importing'
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-6">
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
           Importar tickets
@@ -183,7 +183,7 @@ export default function ImportPage() {
               onChange={handleFileChange}
             />
             <div className="flex flex-col items-center gap-2">
-              <span className="h-10 w-10 rounded-full border border-slate-700 flex items-center justify-center text-lg">
+              <span className="h-10 w-10 rounded-md border border-slate-700 flex items-center justify-center text-lg">
                 📄
               </span>
               <span className="text-sm font-medium text-slate-100">
@@ -202,7 +202,7 @@ export default function ImportPage() {
               className="inline-flex items-center justify-center rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm disabled:cursor-not-allowed disabled:bg-sky-600/40 hover:bg-sky-500 transition"
             >
               {isImporting && (
-                <span className="mr-2 h-4 w-4 rounded-full border-2 border-white/70 border-t-transparent animate-spin" />
+                <span className="mr-2 h-4 w-4 rounded-md border-2 border-white/70 border-t-transparent animate-spin" />
               )}
               {isImporting ? 'Importando...' : 'Importar tickets'}
             </button>
