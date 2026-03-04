@@ -1,4 +1,3 @@
-// app/(app)/layout.tsx
 'use client'
 
 import type { ReactNode } from 'react'
@@ -56,89 +55,59 @@ export default function AppLayout({ children }: AppLayoutProps) {
     router.replace('/login')
   }
 
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + '/')
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 flex">
-      {/* SIDEBAR */}
-      <aside className="hidden md:flex w-64 flex-col border-r border-slate-800 bg-slate-950/80 backdrop-blur">
-        <div className="h-16 flex items-center gap-2 px-6 border-b border-slate-800">
-          <div className="h-8 w-8 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sm font-bold text-sky-200">
-            TS
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold tracking-tight">
-              TicketAgil
-            </span>
-            <span className="text-xs text-slate-400">
-              Copilot de soporte
-            </span>
-          </div>
+    <div className="app-shell min-h-screen text-slate-50 md:grid md:grid-cols-[250px_1fr]">
+      <aside className="surface m-3 hidden md:flex md:flex-col">
+        <div className="border-b border-slate-700/60 px-5 py-5">
+          <p className="text-lg font-semibold tracking-tight">TicketAgil</p>
+          <p className="text-xs text-slate-400">Support Intelligence Suite</p>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 space-y-1.5 px-3 py-4">
           {navItems.map((item) => (
             <button
               key={item.href}
               onClick={() => router.push(item.href)}
-              className={[
-                'w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition',
+              className={`w-full rounded-xl px-3 py-2.5 text-left text-sm transition-all duration-300 ${
                 isActive(item.href)
-                  ? 'bg-sky-500/15 text-sky-100 border border-sky-500/50'
-                  : 'text-slate-300 hover:bg-slate-800/70 hover:text-slate-50',
-              ].join(' ')}
+                  ? 'bg-sky-500/20 text-sky-100 shadow-lg shadow-sky-900/20'
+                  : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
+              }`}
             >
-              <span className="truncate">{item.label}</span>
+              {item.label}
             </button>
           ))}
         </nav>
 
-        <div className="px-4 py-4 border-t border-slate-800 text-xs text-slate-500">
-          <p className="font-mono text-[11px]">v0.1.0 · MVP</p>
-          <p className="mt-1">
-            hecho con <span className="text-sky-400">Next + Supabase + IA</span>
-          </p>
+        <div className="border-t border-slate-700/60 px-5 py-4 text-xs text-slate-500">
+          <p>v0.1.0 · product preview</p>
         </div>
       </aside>
 
-      {/* MAIN */}
-      <div className="flex-1 flex flex-col">
-        {/* TOPBAR */}
-        <header className="h-14 border-b border-slate-800 px-4 flex items-center justify-between bg-slate-950/60 backdrop-blur">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs uppercase tracking-[0.18em] text-slate-400">
-              Soporte · Panel
-            </span>
+      <div className="flex min-h-screen flex-col">
+        <header className="mx-3 mt-3 flex h-16 items-center justify-between rounded-2xl border border-slate-700/60 bg-slate-900/60 px-5 backdrop-blur-xl">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-sm bg-emerald-400/20 text-[11px] text-emerald-200">OK</span>
+            <span className="text-xs uppercase tracking-[0.16em] text-slate-400">Soporte en vivo</span>
           </div>
 
           <div className="flex items-center gap-3">
             {userEmail && (
-              <div className="flex flex-col items-end">
-                <span className="text-xs text-slate-400">
-                  Conectado como
-                </span>
-                <span className="text-sm font-medium truncate max-w-[180px]">
-                  {userEmail}
-                </span>
-              </div>
+              <p className="hidden max-w-[220px] truncate text-sm text-slate-300 sm:block">{userEmail}</p>
             )}
-            <button
-              onClick={handleLogout}
-              className="text-xs rounded-full border border-slate-700 px-3 py-1 hover:bg-slate-800 transition"
-            >
+            <button onClick={handleLogout} className="btn btn-secondary" aria-label="Cerrar sesión">
               Cerrar sesión
             </button>
           </div>
         </header>
 
-        {/* CONTENT */}
-        <main className="flex-1 bg-slate-950/90">
-          <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-8">
+        <main className="flex-1 px-3 pb-3 pt-4">
+          <div className="surface fade-in min-h-[calc(100vh-6.25rem)] p-4 md:p-7">
             {loading ? (
               <div className="flex h-[60vh] items-center justify-center text-slate-400">
-                <span className="h-4 w-4 rounded-full border-2 border-slate-600 border-t-transparent animate-spin mr-2" />
+                <span className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-slate-600 border-t-transparent" />
                 <span>Comprobando sesión...</span>
               </div>
             ) : (

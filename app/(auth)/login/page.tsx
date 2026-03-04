@@ -1,4 +1,3 @@
-// app/(auth)/login/page.tsx
 'use client'
 
 import { FormEvent, useState } from 'react'
@@ -10,7 +9,6 @@ type Mode = 'login' | 'reset'
 export default function LoginPage() {
   const router = useRouter()
   const [mode, setMode] = useState<Mode>('login')
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -23,18 +21,10 @@ export default function LoginPage() {
     setSuccess(null)
     setIsSubmitting(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     setIsSubmitting(false)
-
-    if (error) {
-      setError(error.message)
-      return
-    }
-
+    if (error) return setError(error.message)
     router.push('/dashboard')
   }
 
@@ -42,177 +32,58 @@ export default function LoginPage() {
     e.preventDefault()
     setError(null)
     setSuccess(null)
-
-    if (!email) {
-      setError('Introduce tu email para recuperar la contraseña.')
-      return
-    }
+    if (!email) return setError('Introduce tu email para recuperar la contraseña.')
 
     setIsSubmitting(true)
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     })
 
     setIsSubmitting(false)
-
-    if (error) {
-      setError(error.message)
-      return
-    }
-
-    setSuccess(
-      'Te hemos enviado un correo con instrucciones para restablecer tu contraseña.'
-    )
+    if (error) return setError(error.message)
+    setSuccess('Te enviamos un correo con instrucciones para restablecer tu contraseña.')
   }
-
 
   const isLogin = mode === 'login'
 
   return (
-    <div className="space-y-6">
-      <div className="text-center md:text-left">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {isLogin ? 'Bienvenido de nuevo' : 'Recuperar contraseña'}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          {isLogin
-            ? 'Accede a tu panel de tickets y métricas de soporte.'
-            : 'Te enviaremos un enlace para que puedas crear una nueva contraseña.'}
+    <div className="fade-in space-y-6 text-slate-100">
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">{isLogin ? 'Bienvenido de nuevo' : 'Recuperar contraseña'}</h1>
+        <p className="mt-2 text-sm text-slate-400">
+          {isLogin ? 'Accede al panel de soporte en segundos.' : 'Recibirás un enlace de recuperación.'}
         </p>
       </div>
 
-      {/* LOGIN */}
-      {isLogin && (
-        <form onSubmit={handleLogin} className="space-y-4">
+      <form onSubmit={isLogin ? handleLogin : handleResetPassword} className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm text-slate-300">Email</label>
+          <input id="email" type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+
+        {isLogin && (
           <div className="space-y-2">
-            <label className="block text-sm font-medium" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu-correo@empresa.com"
-            />
+            <label htmlFor="password" className="text-sm text-slate-300">Contraseña</label>
+            <input id="password" type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
+        )}
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium" htmlFor="password">
-                Contraseña
-              </label>
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('reset')
-                  setError(null)
-                  setSuccess(null)
-                }}
-                className="text-xs text-sky-600 hover:text-sky-700 hover:underline font-medium"
-              >
-                ¿Olvidaste tu contraseña?
-              </button>
-            </div>
-            <input
-              id="password"
-              type="password"
-              required
-              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-            />
-          </div>
+        {error && <p className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">{error}</p>}
+        {success && <p className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">{success}</p>}
 
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
-              {error}
-            </p>
-          )}
-
-          {success && (
-            <p className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-md px-3 py-2">
-              {success}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-sky-600 text-white py-2.5 text-sm font-medium hover:bg-sky-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Ingresando…' : 'Entrar'}
-          </button>
-        </form>
-      )}
-
-      {/* RESET PASSWORD */}
-      {!isLogin && (
-        <form onSubmit={handleResetPassword} className="space-y-4">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium" htmlFor="reset-email">
-              Email
-            </label>
-            <input
-              id="reset-email"
-              type="email"
-              required
-              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu-correo@empresa.com"
-            />
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
-              {error}
-            </p>
-          )}
-
-          {success && (
-            <p className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-md px-3 py-2">
-              {success}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-md bg-sky-600 text-white py-2.5 text-sm font-medium hover:bg-sky-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Enviando enlace…' : 'Enviar enlace de recuperación'}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMode('login')
-              setError(null)
-              setSuccess(null)
-            }}
-            className="w-full rounded-md border border-slate-200 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
-          >
-            Volver a iniciar sesión
-          </button>
-        </form>
-      )}
-
-      {/* FOOTER */}
-      <p className="pt-2 text-center md:text-left text-sm text-slate-600">
-        ¿No tienes cuenta?{' '}
-        <button
-          type="button"
-          onClick={() => router.push('/register')}
-          className="text-sky-600 hover:text-sky-700 hover:underline font-medium"
-        >
-          Regístrate
+        <button type="submit" className="btn btn-primary w-full" disabled={isSubmitting}>
+          {isSubmitting ? 'Procesando...' : isLogin ? 'Entrar' : 'Enviar enlace'}
         </button>
-      </p>
+      </form>
+
+      <div className="flex items-center justify-between text-xs">
+        <button type="button" onClick={() => setMode(isLogin ? 'reset' : 'login')} className="text-sky-300 transition hover:text-sky-200">
+          {isLogin ? '¿Olvidaste tu contraseña?' : 'Volver a iniciar sesión'}
+        </button>
+        <button type="button" onClick={() => router.push('/register')} className="text-slate-400 transition hover:text-white">
+          Crear cuenta
+        </button>
+      </div>
     </div>
   )
 }

@@ -191,7 +191,7 @@ export default function SettingsPage() {
     : 0
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-6">
       {/* HEADER */}
       <header className="space-y-2">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-50">
@@ -209,7 +209,7 @@ export default function SettingsPage() {
 
       {loading ? (
         <div className="flex h-[40vh] items-center justify-center text-slate-300">
-          <span className="mr-2 h-5 w-5 rounded-full border-2 border-slate-500 border-t-transparent animate-spin" />
+          <span className="mr-2 h-5 w-5 rounded-md border-2 border-slate-500 border-t-transparent animate-spin" />
           <span className="text-sm">Cargando configuración...</span>
         </div>
       ) : (
@@ -250,7 +250,7 @@ export default function SettingsPage() {
               <input
                 id="company_name"
                 type="text"
-                className="w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 py-2.5 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+                className="w-full rounded-xl border border-slate-700 input "
                 placeholder="Ej: TicketSense, Acme Support, Mi SaaS, etc."
                 value={form.company_name}
                 onChange={(e) => handleChange('company_name', e.target.value)}
@@ -282,7 +282,7 @@ export default function SettingsPage() {
                   </label>
                   <select
                     id="language"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 py-2.5 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+                    className="w-full rounded-xl border border-slate-700 input "
                     value={form.language}
                     onChange={(e) => handleChange('language', e.target.value)}
                   >
@@ -303,7 +303,7 @@ export default function SettingsPage() {
                   </label>
                   <select
                     id="default_tone"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950/90 px-3 py-2.5 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+                    className="w-full rounded-xl border border-slate-700 input "
                     value={form.default_tone}
                     onChange={(e) =>
                       handleChange('default_tone', e.target.value)
@@ -368,7 +368,7 @@ export default function SettingsPage() {
               <textarea
                 id="reply_guidelines"
                 rows={6}
-                className="w-full rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2.5 text-sm text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500 resize-y"
+                className="w-full rounded-2xl border border-slate-700 input  resize-y"
                 placeholder={
                   'Ejemplos:\n' +
                   '- Nunca prometas reembolsos; ofrece revisar el caso.\n' +
@@ -399,10 +399,10 @@ export default function SettingsPage() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-full bg-sky-600 px-4 py-2.5 text-xs md:text-sm font-medium text-white shadow-sm hover:bg-sky-500 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2.5 text-xs md:text-sm font-medium text-white shadow-sm hover:bg-sky-500 transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {saving && (
-                <span className="h-3.5 w-3.5 rounded-full border-2 border-sky-100 border-t-transparent animate-spin" />
+                <span className="h-3.5 w-3.5 rounded-md border-2 border-sky-100 border-t-transparent animate-spin" />
               )}
               {saving ? 'Guardando...' : 'Guardar configuración'}
             </button>

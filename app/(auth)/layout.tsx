@@ -1,76 +1,26 @@
-// app/(auth)/layout.tsx
 import type { ReactNode } from 'react'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-950 bg-[radial-gradient(circle_at_top,_#1e293b,_#020617)] px-4">
-      <section className="w-full max-w-4xl grid md:grid-cols-2 bg-slate-900/70 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden backdrop-blur">
-        {/* Columna izquierda: brand / marketing */}
-        <div className="hidden md:flex flex-col justify-between p-10 text-slate-100 bg-gradient-to-b from-sky-500/20 via-slate-900 to-slate-950">
+    <main className="min-h-screen px-4 py-8 md:px-8">
+      <section className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-[30px] border border-slate-700/60 bg-slate-950/70 shadow-2xl shadow-slate-950/40 md:grid-cols-[1.1fr_1fr]">
+        <div className="hidden flex-col justify-between bg-[linear-gradient(160deg,rgba(56,189,248,.22),rgba(15,23,42,.95))] p-10 md:flex">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-slate-900/70 border border-sky-500/40 px-4 py-1.5 text-sm font-medium mb-6">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Live 
-              <span className="text-sky-300">· TicketAgil</span>
-            </div>
-
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">
-              Copilot de soporte al cliente,
-              <span className="text-sky-400"> listo para producción.</span>
+            <p className="inline-flex items-center gap-2 rounded-md border border-sky-300/30 bg-sky-400/10 px-3 py-1 text-xs text-sky-100">
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-sm bg-emerald-400/20 text-[10px] text-emerald-200">✓</span>
+              TicketAgil Platform
+            </p>
+            <h1 className="mt-8 text-4xl font-semibold tracking-tight text-white">
+              Soporte al cliente con estética premium y foco en velocidad.
             </h1>
-            <p className="text-base text-slate-200 leading-relaxed">
-              Importa tus tickets, deja que la IA resuma, clasifique y sugiera
-              respuestas. Diseñado para agentes de soporte y team leads que
-              quieren ver más allá de la bandeja de entrada.
+            <p className="mt-4 text-sm leading-relaxed text-slate-200">
+              Importa tickets, usa IA para priorizar, responder y cerrar más rápido con una experiencia cuidada en cada interacción.
             </p>
           </div>
-
-          <div className="mt-10 space-y-3 text-base">
-            <div className="flex items-start gap-2">
-              <span className="mt-1 text-sky-400">●</span>
-              <p className="text-slate-100">
-                Resúmenes en segundos de tickets largos y complejos.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="mt-1 text-sky-400">●</span>
-              <p className="text-slate-100">
-                Clasificación automática por categoría y severidad.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="mt-1 text-sky-400">●</span>
-              <p className="text-slate-100">
-                Respuestas sugeridas con tono profesional y consistente.
-              </p>
-            </div>
-
-            <p className="pt-3 text-xs text-slate-400">
-              Construido con Next.js, Supabase y LLMs — @kriv-bit
-            </p>
-          </div>
+          <p className="text-xs text-slate-300/80">Diseñado para equipos de soporte modernos.</p>
         </div>
 
-        {/* Columna derecha: formulario (login/register) */}
-        <div className="bg-white text-slate-900 p-8 md:p-10 flex flex-col justify-center">
-          <div className="mb-6 text-center md:text-left">
-            <div className="inline-flex items-center gap-3 mb-3">
-              <div className="h-9 w-9 rounded-full bg-sky-100 flex items-center justify-center text-sky-700 text-sm font-semibold">
-                TS
-              </div>
-              <div className="text-left">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                  TicketAgil
-                </p>
-                <p className="text-xs text-slate-500">
-                  Copilot de soporte al cliente
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {children}
-        </div>
+        <div className="bg-slate-950/40 p-7 md:p-10">{children}</div>
       </section>
     </main>
   )

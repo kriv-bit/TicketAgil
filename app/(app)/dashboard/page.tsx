@@ -367,7 +367,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex h-[60vh] items-center justify-center text-slate-400">
-        <span className="mr-2 h-4 w-4 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
+        <span className="mr-2 h-4 w-4 rounded-md border-2 border-slate-600 border-t-transparent animate-spin" />
         Cargando dashboard...
       </div>
     )
@@ -388,7 +388,7 @@ export default function DashboardPage() {
 
   if (tickets.length === 0) {
     return (
-      <div className="space-y-6">
+      <div className="fade-in space-y-6">
         <header className="flex flex-col gap-2">
           <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-slate-50">
             Dashboard de soporte
@@ -414,7 +414,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in tab-panel space-y-6">
       {/* HEADER + FILTROS */}
       <header className="space-y-4">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
@@ -432,6 +432,7 @@ export default function DashboardPage() {
             {/* Filtro periodo */}
             <div className="flex items-center gap-2">
               <span className="text-slate-500">Periodo:</span>
+              <div className="segmented">
               {(['7d', '30d', '90d', 'all'] as TimeFilter[]).map((v) => {
                 const label =
                   v === '7d'
@@ -447,21 +448,19 @@ export default function DashboardPage() {
                     key={v}
                     type="button"
                     onClick={() => setTimeFilter(v)}
-                    className={`rounded-full px-3 py-1 border text-[11px] transition ${
-                      active
-                        ? 'bg-slate-100 text-slate-900 border-slate-100'
-                        : 'bg-slate-900/60 text-slate-300 border-slate-700 hover:border-slate-500'
-                    }`}
+                    className={active ? "active" : ""}
                   >
                     {label}
                   </button>
                 )
               })}
+              </div>
             </div>
 
             {/* Filtro estado */}
             <div className="flex items-center gap-2">
               <span className="text-slate-500">Estado:</span>
+              <div className="segmented">
               {(['all', 'open', 'pending', 'closed'] as StatusFilter[]).map(
                 (s) => {
                   const label =
@@ -478,17 +477,14 @@ export default function DashboardPage() {
                       key={s}
                       type="button"
                       onClick={() => setStatusFilter(s)}
-                      className={`rounded-full px-3 py-1 border text-[11px] transition ${
-                        active
-                          ? 'bg-slate-100 text-slate-900 border-slate-100'
-                          : 'bg-slate-900/60 text-slate-300 border-slate-700 hover:border-slate-500'
-                      }`}
+                      className={active ? "active" : ""}
                     >
                       {label}
                     </button>
                   )
                 },
               )}
+              </div>
             </div>
 
             {/* Search */}
@@ -496,7 +492,7 @@ export default function DashboardPage() {
               <input
                 type="text"
                 placeholder="Buscar asunto..."
-                className="w-44 md:w-56 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-xs text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+                className="input w-44 md:w-56 text-xs"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -507,7 +503,7 @@ export default function DashboardPage() {
 
       {/* KPIs PRINCIPALES */}
       <section className="grid gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 px-4 py-3 motion-lift">
           <p className="text-[11px] text-slate-400 uppercase tracking-[0.18em]">
             Tickets totales
           </p>
@@ -519,7 +515,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-3">
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 motion-lift">
           <p className="text-[11px] text-emerald-200 uppercase tracking-[0.18em]">
             Abiertos
           </p>
@@ -531,7 +527,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 motion-lift">
           <p className="text-[11px] text-amber-200 uppercase tracking-[0.18em]">
             Pendientes
           </p>
@@ -543,7 +539,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-700 bg-slate-900/40 px-4 py-3">
+        <div className="rounded-2xl border border-slate-700 bg-slate-900/40 px-4 py-3 motion-lift">
           <p className="text-[11px] text-slate-300 uppercase tracking-[0.18em]">
             Cerrados
           </p>
@@ -582,7 +578,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-700 bg-slate-900/40 px-4 py-3">
+        <div className="rounded-2xl border border-slate-700 bg-slate-900/40 px-4 py-3 motion-lift">
           <p className="text-[11px] text-slate-300 uppercase tracking-[0.18em]">
             Cobertura IA
           </p>
@@ -785,7 +781,7 @@ export default function DashboardPage() {
                 latestTickets.map((t) => (
                   <tr
                     key={t.id}
-                    className="border-b border-slate-800/70 hover:bg-slate-900/60 transition"
+                    className="border-b border-slate-800/70 hover:bg-slate-900/60 transition motion-lift"
                   >
                     <td className="px-3 py-2 align-middle text-slate-100">
                       {t.subject || '(Sin asunto)'}
@@ -795,18 +791,18 @@ export default function DashboardPage() {
                     </td>
                     <td className="px-3 py-2 align-middle text-xs text-slate-300">
                       {t.status === 'open' && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-300 border border-emerald-500/40">
-                          ● Abierto
+                        <span className="status-tag border-emerald-400/50 bg-emerald-500/10 text-emerald-200">
+                          Abierto
                         </span>
                       )}
                       {t.status === 'pending' && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] text-amber-300 border border-amber-500/40">
-                          ● Pendiente
+                        <span className="status-tag border-amber-400/50 bg-amber-500/10 text-amber-200">
+                          Pendiente
                         </span>
                       )}
                       {t.status === 'closed' && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-600/20 px-2 py-0.5 text-[11px] text-slate-200 border border-slate-500/60">
-                          ● Cerrado
+                        <span className="status-tag border-slate-500/60 bg-slate-600/20 text-slate-200">
+                          Cerrado
                         </span>
                       )}
                     </td>
@@ -817,27 +813,10 @@ export default function DashboardPage() {
                       {formatDate(t.created_at)}
                     </td>
                     <td className="px-3 py-2 align-middle text-right text-[11px] text-slate-300">
-                      <div className="inline-flex items-center gap-1.5">
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            t.has_summary ? 'bg-sky-400' : 'bg-slate-700'
-                          }`}
-                          title="Resumen IA"
-                        />
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            t.has_classification
-                              ? 'bg-violet-400'
-                              : 'bg-slate-700'
-                          }`}
-                          title="Clasificación IA"
-                        />
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            t.has_reply ? 'bg-emerald-400' : 'bg-slate-700'
-                          }`}
-                          title="Respuesta sugerida IA"
-                        />
+                      <div className="inline-flex items-center gap-1">
+                        <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-md border px-1 text-[9px] font-semibold ${t.has_summary ? 'border-sky-400/60 bg-sky-500/15 text-sky-200' : 'border-slate-700 text-slate-500'}`} title="Resumen IA">S</span>
+                        <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-md border px-1 text-[9px] font-semibold ${t.has_classification ? 'border-violet-400/60 bg-violet-500/15 text-violet-200' : 'border-slate-700 text-slate-500'}`} title="Clasificación IA">C</span>
+                        <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-md border px-1 text-[9px] font-semibold ${t.has_reply ? 'border-emerald-400/60 bg-emerald-500/15 text-emerald-200' : 'border-slate-700 text-slate-500'}`} title="Respuesta sugerida IA">R</span>
                       </div>
                     </td>
                   </tr>

@@ -516,42 +516,13 @@ export default function TicketsPage() {
   }
 
   const renderIaDots = (ticket: TicketRow) => {
-    const base = 'h-2 w-2 rounded-full transition shadow-sm'
-    const off = 'bg-slate-700/60'
-    const onSky = 'bg-sky-400 shadow-[0_0_0_2px_rgba(56,189,248,0.35)]'
-    const onViolet = 'bg-violet-400 shadow-[0_0_0_2px_rgba(139,92,246,0.35)]'
-    const onEmerald = 'bg-emerald-400 shadow-[0_0_0_2px_rgba(52,211,153,0.35)]'
+    const cell = 'inline-flex h-5 min-w-5 items-center justify-center rounded-md border px-1 text-[9px] font-semibold'
 
     return (
-      <div className="flex items-center gap-1.5">
-        <span
-          className={`${base} ${
-            ticket.has_summary ? onSky : off
-          }`}
-          title={
-            ticket.has_summary ? 'Resumen generado' : 'Sin resumen IA'
-          }
-        />
-        <span
-          className={`${base} ${
-            ticket.has_classification ? onViolet : off
-          }`}
-          title={
-            ticket.has_classification
-              ? 'Clasificación generada'
-              : 'Sin clasificación IA'
-          }
-        />
-        <span
-          className={`${base} ${
-            ticket.has_reply ? onEmerald : off
-          }`}
-          title={
-            ticket.has_reply
-              ? 'Respuesta sugerida generada'
-              : 'Sin respuesta sugerida'
-          }
-        />
+      <div className="flex items-center gap-1">
+        <span className={`${cell} ${ticket.has_summary ? 'border-sky-400/60 bg-sky-500/15 text-sky-200' : 'border-slate-700 text-slate-500'}`} title={ticket.has_summary ? 'Resumen generado' : 'Sin resumen IA'}>S</span>
+        <span className={`${cell} ${ticket.has_classification ? 'border-violet-400/60 bg-violet-500/15 text-violet-200' : 'border-slate-700 text-slate-500'}`} title={ticket.has_classification ? 'Clasificación generada' : 'Sin clasificación IA'}>C</span>
+        <span className={`${cell} ${ticket.has_reply ? 'border-emerald-400/60 bg-emerald-500/15 text-emerald-200' : 'border-slate-700 text-slate-500'}`} title={ticket.has_reply ? 'Respuesta sugerida generada' : 'Sin respuesta sugerida'}>R</span>
       </div>
     )
   }
@@ -559,7 +530,7 @@ export default function TicketsPage() {
   if (loading) {
     return (
       <div className="flex h-[60vh] items-center justify-center text-slate-400">
-        <span className="mr-2 h-4 w-4 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
+        <span className="mr-2 h-4 w-4 rounded-md border-2 border-slate-600 border-t-transparent animate-spin" />
         Cargando tickets...
       </div>
     )
@@ -577,7 +548,7 @@ export default function TicketsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
@@ -616,15 +587,15 @@ export default function TicketsPage() {
 
       {/* Batch status */}
       {batchMessage && (
-        <div className="rounded-xl border border-sky-500/40 bg-sky-500/10 px-4 py-2 text-xs text-sky-100">
+        <div className="toast-in rounded-xl border border-sky-500/40 bg-sky-500/10 px-4 py-2 text-xs text-sky-100">
           {batchMessage}
         </div>
       )}
       {batchProgress && (
         <div className="flex items-center gap-3 text-[11px] text-slate-400">
-          <div className="flex-1 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div className="progress-indeterminate flex-1 h-1.5 rounded-md bg-slate-800 overflow-hidden">
             <div
-              className="h-1.5 bg-sky-500"
+              className="h-1.5 bg-sky-500 transition-all duration-300"
               style={{
                 width: `${(batchProgress.done / batchProgress.total) * 100}%`,
               }}
@@ -641,6 +612,7 @@ export default function TicketsPage() {
         {/* Filtros por estado */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className="text-slate-500 mr-1">Estado:</span>
+          <div className="segmented">
           {(['all', 'open', 'pending', 'closed'] as StatusFilter[]).map((status) => {
             const label =
               status === 'all'
@@ -656,16 +628,13 @@ export default function TicketsPage() {
                 key={status}
                 type="button"
                 onClick={() => setStatusFilter(status)}
-                className={`inline-flex items-center rounded-full px-3 py-1 text-[11px] border transition ${
-                  active
-                    ? 'bg-slate-100 text-slate-900 border-slate-100'
-                    : 'bg-slate-900/60 text-slate-300 border-slate-700 hover:border-slate-500'
-                }`}
+                className={active ? "active" : ""}
               >
                 {label}
               </button>
             )
           })}
+          </div>
         </div>
 
         {/* Search + orden */}
@@ -674,7 +643,7 @@ export default function TicketsPage() {
             <input
               type="text"
               placeholder="Buscar por asunto..."
-              className="w-48 md:w-64 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-xs text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+              className="input w-48 md:w-64 text-xs"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -683,7 +652,7 @@ export default function TicketsPage() {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-            className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1.5 text-[11px] text-slate-200 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+            className="select text-[11px]"
           >
             <option value="desc">Más recientes primero</option>
             <option value="asc">Más antiguos primero</option>
@@ -696,7 +665,7 @@ export default function TicketsPage() {
         {/* Selección + selección rápida */}
         <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
           <span className="inline-flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-sky-500" />
+            <span className="h-2 w-2 rounded-sm bg-sky-500" />
             Seleccionados:{' '}
             <span className="font-semibold text-slate-100">
               {selectedIds.length}
@@ -708,7 +677,7 @@ export default function TicketsPage() {
             <input
               type="number"
               min={1}
-              className="w-16 rounded-full border border-slate-700 bg-slate-950/70 px-2 py-1 text-[11px] text-slate-100 outline-none focus:ring-2 focus:ring-sky-500/60 focus:border-sky-500"
+              className="input w-16 px-2 py-1 text-[11px]"
               value={bulkSelectCount}
               onChange={(e) => setBulkSelectCount(e.target.value)}
               placeholder="N"
@@ -716,7 +685,7 @@ export default function TicketsPage() {
             <button
               type="button"
               onClick={handleApplyBulkSelect}
-              className="rounded-full border border-slate-700 px-3 py-1 text-[11px] text-slate-200 hover:bg-slate-800/80 transition"
+              className="btn btn-secondary py-1 text-[11px]"
             >
               Primeros N filtrados
             </button>
@@ -730,11 +699,11 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={handleBatchSummary}
-            className="inline-flex items-center gap-1 rounded-full border border-sky-500/60 bg-sky-500/10 px-3 py-1.5 text-[11px] font-medium text-sky-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-500/20 transition"
+            className="btn border border-sky-500/60 bg-sky-500/10 text-[11px] font-medium text-sky-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-500/20 transition"
           >
             {batchRunning ? (
               <>
-                <span className="h-3 w-3 rounded-full border-2 border-sky-200 border-t-transparent animate-spin" />
+                <span className="h-3 w-3 rounded-md border-2 border-sky-200 border-t-transparent animate-spin" />
                 Ejecutando batch...
               </>
             ) : (
@@ -746,11 +715,11 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={handleBatchClassify}
-            className="inline-flex items-center gap-1 rounded-full border border-violet-500/60 bg-violet-500/10 px-3 py-1.5 text-[11px] font-medium text-violet-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-violet-500/20 transition"
+            className="btn border border-violet-500/60 bg-violet-500/10 text-[11px] font-medium text-violet-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-violet-500/20 transition"
           >
             {batchRunning ? (
               <>
-                <span className="h-3 w-3 rounded-full border-2 border-violet-200 border-t-transparent animate-spin" />
+                <span className="h-3 w-3 rounded-md border-2 border-violet-200 border-t-transparent animate-spin" />
                 Ejecutando batch...
               </>
             ) : (
@@ -762,11 +731,11 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={handleBatchReply}
-            className="inline-flex items-center gap-1 rounded-full border border-emerald-500/60 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-medium text-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/20 transition"
+            className="btn border border-emerald-500/60 bg-emerald-500/10 text-[11px] font-medium text-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/20 transition"
           >
             {batchRunning ? (
               <>
-                <span className="h-3 w-3 rounded-full border-2 border-emerald-200 border-t-transparent animate-spin" />
+                <span className="h-3 w-3 rounded-md border-2 border-emerald-200 border-t-transparent animate-spin" />
                 Ejecutando batch...
               </>
             ) : (
@@ -779,7 +748,7 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={handleBatchStatusOpen}
-            className="inline-flex items-center gap-1 rounded-full border border-emerald-500/60 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-medium text-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/20 transition"
+            className="btn border border-emerald-500/60 bg-emerald-500/10 text-[11px] font-medium text-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/20 transition"
           >
             Marcar abiertos
           </button>
@@ -787,7 +756,7 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={handleBatchStatusPending}
-            className="inline-flex items-center gap-1 rounded-full border border-amber-500/60 bg-amber-500/10 px-3 py-1.5 text-[11px] font-medium text-amber-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-500/20 transition"
+            className="btn border border-amber-500/60 bg-amber-500/10 text-[11px] font-medium text-amber-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-500/20 transition"
           >
             Marcar pendientes
           </button>
@@ -795,7 +764,7 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={handleBatchStatusClosed}
-            className="inline-flex items-center gap-1 rounded-full border border-slate-500/60 bg-slate-600/20 px-3 py-1.5 text-[11px] font-medium text-slate-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-600/40 transition"
+            className="btn border border-slate-500/60 bg-slate-600/20 text-[11px] font-medium text-slate-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-600/40 transition"
           >
             Marcar cerrados
           </button>
@@ -805,7 +774,7 @@ export default function TicketsPage() {
             type="button"
             disabled={!canRunBatch || selectedIds.length === 0}
             onClick={runBatchDelete}
-            className="inline-flex items-center gap-1 rounded-full border border-rose-500/60 bg-rose-500/10 px-3 py-1.5 text-[11px] font-medium text-rose-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-rose-500/20 transition"
+            className="btn border border-rose-500/60 bg-rose-500/10 text-[11px] font-medium text-rose-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-rose-500/20 transition"
           >
             Eliminar seleccionados
           </button>
@@ -887,18 +856,18 @@ export default function TicketsPage() {
                     </td>
                     <td className="px-3 py-2 align-middle text-xs text-slate-300">
                       {ticket.status === 'open' && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-300 border border-emerald-500/40">
-                          ● Abierto
+                        <span className="status-tag border-emerald-400/50 bg-emerald-500/10 text-emerald-200">
+                          Abierto
                         </span>
                       )}
                       {ticket.status === 'pending' && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] text-amber-300 border border-amber-500/40">
-                          ● Pendiente
+                        <span className="status-tag border-amber-400/50 bg-amber-500/10 text-amber-200">
+                          Pendiente
                         </span>
                       )}
                       {ticket.status === 'closed' && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-600/20 px-2 py-0.5 text-[11px] text-slate-200 border border-slate-500/60">
-                          ● Cerrado
+                        <span className="status-tag border-slate-500/60 bg-slate-600/20 text-slate-200">
+                          Cerrado
                         </span>
                       )}
                     </td>
@@ -912,7 +881,7 @@ export default function TicketsPage() {
                       <button
                         type="button"
                         onClick={() => router.push(`/tickets/${ticket.id}`)}
-                        className="inline-flex items-center gap-1 rounded-full border border-slate-700 px-3 py-1 text-[11px] text-slate-200 hover:bg-slate-800/80 transition"
+                        className="btn btn-secondary text-[11px]"
                       >
                         Ver detalle
                       </button>

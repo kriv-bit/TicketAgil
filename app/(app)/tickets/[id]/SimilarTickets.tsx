@@ -56,7 +56,7 @@ export function SimilarTickets({ ticketId }: Props) {
   if (loading) {
     return (
       <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-300 flex items-center gap-2">
-        <span className="h-4 w-4 rounded-full border-2 border-slate-500 border-t-transparent animate-spin" />
+        <span className="h-4 w-4 rounded-md border-2 border-slate-500 border-t-transparent animate-spin" />
         <span>Buscando tickets similares...</span>
       </div>
     )
@@ -114,7 +114,7 @@ export function SimilarTickets({ ticketId }: Props) {
             <div className="flex flex-col items-end gap-1">
               <span
                 className={[
-                  'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium capitalize',
+                  'inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium capitalize',
                   t.status === 'closed'
                     ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/40'
                     : t.status === 'pending'
