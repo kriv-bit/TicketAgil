@@ -1,6 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from 'next'
 import './globals.css'
+import MotionShell from '@/components/MotionShell'
 
 const APP_NAME = 'TicketAgil'
 const APP_DESCRIPTION =
@@ -62,7 +63,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="h-full">
       <body className="min-h-full bg-background text-foreground antialiased">
-        {children}
+        <MotionShell>{children}</MotionShell>
       </body>
     </html>
   )

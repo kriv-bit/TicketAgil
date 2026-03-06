@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import MotionShell from '@/components/MotionShell'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -28,7 +29,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             <p className="text-xs uppercase tracking-[0.18em] text-muted">Acceso seguro</p>
             <p className="mt-2 text-xl font-semibold">TicketAgil Console</p>
           </div>
-          {children}
+          <MotionShell className="motion-scope">{children}</MotionShell>
         </div>
       </section>
     </main>
