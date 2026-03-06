@@ -115,7 +115,7 @@ export default function RegisterPage() {
     <div>
       <h1 className="text-2xl font-semibold mb-1 text-center">Crear cuenta</h1>
       <p className="text-sm text-gray-500 mb-6 text-center">
-        TicketAgil – Copilot de soporte al cliente
+        TicketAgil – Plataforma de soporte al cliente
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -128,7 +128,7 @@ export default function RegisterPage() {
             id="email"
             type="email"
             required
-            className="w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            className="w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="tu-correo@ejemplo.com"
@@ -145,7 +145,7 @@ export default function RegisterPage() {
             type="password"
             required
             minLength={8}
-            className="w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            className="w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Mínimo 8 caracteres"
@@ -218,10 +218,10 @@ export default function RegisterPage() {
             id="confirm-password"
             type="password"
             required
-            className={`w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:border-sky-500 ${
+            className={`w-full border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:border-slate-400 ${
               confirmPassword && !passwordsMatch
                 ? 'border-red-500 focus:ring-red-500'
-                : 'focus:ring-sky-500'
+                : 'focus:ring-slate-400'
             }`}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -249,7 +249,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-sky-600 text-white py-2 text-sm font-medium hover:bg-sky-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full rounded-md bg-slate-900 text-white py-2 text-sm font-medium hover:bg-slate-800 transition disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Creando cuenta...' : 'Registrarse'}
         </button>

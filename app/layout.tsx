@@ -4,11 +4,11 @@ import './globals.css'
 
 const APP_NAME = 'TicketAgil'
 const APP_DESCRIPTION =
-  'Copilot de soporte al cliente con IA para resumir tickets, clasificarlos y sugerir respuestas en segundos.'
+  'Plataforma de soporte al cliente para resumir tickets, clasificarlos y sugerir respuestas con contexto operativo.'
 
 export const metadata: Metadata = {
   title: {
-    default: `${APP_NAME} · Copilot de soporte al cliente`,
+    default: `${APP_NAME} · Plataforma de soporte al cliente`,
     template: `%s · ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: `${APP_NAME} · Copilot de soporte al cliente`,
+    title: `${APP_NAME} · Plataforma de soporte al cliente`,
     description: APP_DESCRIPTION,
     url: 'https://ticket-agil.vercel.app', // ⚠️ 
     siteName: APP_NAME,
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${APP_NAME} · Copilot de soporte al cliente`,
+    title: `${APP_NAME} · Plataforma de soporte al cliente`,
     description: APP_DESCRIPTION,
     images: ['/og.png'],
   },
@@ -61,7 +61,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="h-full">
-      <body className="min-h-full bg-slate-950 text-slate-100">
+      <body className="min-h-full bg-background text-foreground antialiased">
         {children}
       </body>
     </html>

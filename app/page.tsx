@@ -1,159 +1,67 @@
-// app/page.tsx
 import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-5xl mx-auto grid gap-10 md:grid-cols-[1.4fr,1fr] items-center">
-        {/* Columna izquierda - Hero */}
-        <section>
-          <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-200 mb-4">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            TicketAgil · Copilot de soporte con IA
-          </div>
-
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
-            Entiende y responde tickets
-            <span className="text-sky-400"> más rápido</span>.
+    <main className="mx-auto flex min-h-screen w-full max-w-6xl items-center px-4 py-8 md:px-6">
+      <div className="grid w-full gap-6 md:grid-cols-[1.15fr_0.85fr]">
+        <section className="surface p-7 md:p-10">
+          <p className="text-xs uppercase tracking-[0.22em] text-muted">TicketAgil Platform</p>
+          <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-5xl">
+            Gestión de soporte más clara, rápida y consistente.
           </h1>
-
-          <p className="text-sm md:text-base text-slate-300 mb-6 max-w-xl">
-            Importa tus tickets desde CSV, deja que la IA los resuma, los
-            clasifique y te sugiera respuestas con el tono de tu empresa.
-            Diseñado para agentes de soporte y team leads que quieren ir
-            más allá del simple “CRM de tickets”.
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted">
+            TicketAgil organiza el trabajo diario de equipos de atención con una experiencia enfocada
+            en productividad, contexto y calidad de respuesta.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-sky-500 transition"
-            >
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/login" className="btn-primary text-sm">
               Entrar al panel
             </Link>
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center rounded-full border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-100 hover:bg-slate-900 transition"
-            >
+            <Link href="/register" className="btn-secondary text-sm">
               Crear cuenta
             </Link>
-            <span className="text-xs text-slate-500">
-              Sube tu CSV.
-            </span>
           </div>
 
-          <div className="grid gap-3 text-xs md:text-sm text-slate-300">
-            <div className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sky-400" />
-              <p>
-                <span className="font-semibold text-slate-100">
-                  Resúmenes instantáneos
-                </span>{' '}
-                de tickets largos, en 1–3 frases.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              <p>
-                <span className="font-semibold text-slate-100">
-                  Clasificación automática
-                </span>{' '}
-                por categoría y severidad.
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-amber-400" />
-              <p>
-                <span className="font-semibold text-slate-100">
-                  Respuestas sugeridas
-                </span>{' '}
-                con tono configurable y políticas de tu equipo.
-              </p>
-            </div>
+          <div className="mt-9 grid gap-3 sm:grid-cols-3">
+            {[
+              ['Flujo unificado', 'Importación, análisis y resolución en el mismo espacio de trabajo.'],
+              ['Métricas operativas', 'Seguimiento de volumen, tiempos y estado de tickets en tiempo real.'],
+              ['Respuestas consistentes', 'Soporte para guías de comunicación y calidad del equipo.'],
+            ].map(([title, text]) => (
+              <article key={title} className="surface-muted p-4">
+                <h2 className="text-sm font-semibold">{title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+              </article>
+            ))}
           </div>
         </section>
 
-        {/* Columna derecha - Tarjeta preview */}
-        <section className="relative">
-          <div className="absolute -top-10 -right-10 h-40 w-40 bg-sky-500/20 blur-3xl rounded-full pointer-events-none" />
-          <div className="relative rounded-3xl border border-slate-800 bg-slate-900/70 p-4 md:p-5 shadow-2xl backdrop-blur-lg">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-xs font-semibold text-sky-200">
-                  TS
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-slate-100">
-                    TicketAgil
-                  </span>
-                  <span className="text-[11px] text-slate-400">
-                    Panel de soporte
-                  </span>
-                </div>
-              </div>
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[11px] text-emerald-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Demo
-              </span>
+        <section className="surface p-6 md:p-7">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-muted">Vista de producto</h2>
+          <div className="mt-4 space-y-4">
+            <div className="surface-muted p-4">
+              <p className="text-xs text-muted">Tickets activos</p>
+              <p className="mt-2 text-3xl font-semibold">37</p>
             </div>
-
-            <div className="space-y-3 mb-4">
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-[0.16em]">
-                    Tickets totales
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-slate-50">
-                    248
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-[0.16em]">
-                    Abiertos
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-amber-300">
-                    37
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-[0.16em]">
-                    Cerrados (24h)
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-emerald-300">
-                    62
-                  </p>
-                </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="surface-muted p-4">
+                <p className="text-xs text-muted">Tiempo medio</p>
+                <p className="mt-1 text-xl font-semibold">4.2 h</p>
               </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-[11px] text-slate-300">
-                <p className="mb-1 text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                  Ticket destacado
-                </p>
-                <p className="font-medium text-slate-100 truncate">
-                  Error al procesar pago con tarjeta
-                </p>
-                <p className="mt-1 line-clamp-2 text-slate-400">
-                  “Intenté comprar el plan anual y mi tarjeta fue rechazada,
-                  pero el cargo aparece pendiente en mi banco...”
-                </p>
-                <div className="mt-2 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-[11px]">
-                    <span className="inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-amber-200">
-                      payment · high
-                    </span>
-                    <span className="text-slate-500">
-                      Resumen · Respuesta IA lista
-                    </span>
-                  </div>
-                </div>
+              <div className="surface-muted p-4">
+                <p className="text-xs text-muted">Cerrados hoy</p>
+                <p className="mt-1 text-xl font-semibold">18</p>
               </div>
             </div>
-
-            <p className="text-[11px] text-slate-500 text-center">
-              Construido con <span className="text-sky-300">Next.js</span>,{' '}
-              <span className="text-sky-300">Supabase</span> y{' '}
-              <span className="text-sky-300">Groq (LLMs)</span>.
-            </p>
+            <div className="surface-muted p-4">
+              <p className="text-xs text-muted">Actividad reciente</p>
+              <ul className="mt-2 space-y-2 text-sm">
+                <li className="flex items-center justify-between"><span>Fallo en cobros recurrentes</span><span className="text-muted">Abierto</span></li>
+                <li className="flex items-center justify-between"><span>Consulta de facturación</span><span className="text-muted">Pendiente</span></li>
+                <li className="flex items-center justify-between"><span>Error de acceso SSO</span><span className="text-muted">Cerrado</span></li>
+              </ul>
+            </div>
           </div>
         </section>
       </div>
