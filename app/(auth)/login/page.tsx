@@ -93,7 +93,7 @@ export default function LoginPage() {
               id="email"
               type="email"
               required
-              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="tu-correo@empresa.com"
@@ -112,7 +112,7 @@ export default function LoginPage() {
                   setError(null)
                   setSuccess(null)
                 }}
-                className="text-xs text-sky-600 hover:text-sky-700 hover:underline font-medium"
+                className="text-xs text-slate-700 hover:text-slate-900 hover:underline font-medium"
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -121,7 +121,7 @@ export default function LoginPage() {
               id="password"
               type="password"
               required
-              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -143,7 +143,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-sky-600 text-white py-2.5 text-sm font-medium hover:bg-sky-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 text-white py-2.5 text-sm font-medium hover:bg-slate-800 transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Ingresando…' : 'Entrar'}
           </button>
@@ -161,7 +161,7 @@ export default function LoginPage() {
               id="reset-email"
               type="email"
               required
-              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+              className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="tu-correo@empresa.com"
@@ -183,7 +183,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-md bg-sky-600 text-white py-2.5 text-sm font-medium hover:bg-sky-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full rounded-md bg-slate-900 text-white py-2.5 text-sm font-medium hover:bg-slate-800 transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Enviando enlace…' : 'Enviar enlace de recuperación'}
           </button>
@@ -208,7 +208,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => router.push('/register')}
-          className="text-sky-600 hover:text-sky-700 hover:underline font-medium"
+          className="text-slate-700 hover:text-slate-900 hover:underline font-medium"
         >
           Regístrate
         </button>

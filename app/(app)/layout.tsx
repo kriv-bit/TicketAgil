@@ -1,4 +1,3 @@
-// app/(app)/layout.tsx
 'use client'
 
 import type { ReactNode } from 'react'
@@ -18,8 +17,8 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Tickets', href: '/tickets' },
-  { label: 'Importar', href: '/import' },
-  { label: 'Customización', href: '/settings' },
+  { label: 'Importaciones', href: '/import' },
+  { label: 'Configuración', href: '/settings' },
 ]
 
 export default function AppLayout({ children }: AppLayoutProps) {
@@ -56,90 +55,80 @@ export default function AppLayout({ children }: AppLayoutProps) {
     router.replace('/login')
   }
 
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + '/')
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 flex">
-      {/* SIDEBAR */}
-      <aside className="hidden md:flex w-64 flex-col border-r border-slate-800 bg-slate-950/80 backdrop-blur">
-        <div className="h-16 flex items-center gap-2 px-6 border-b border-slate-800">
-          <div className="h-8 w-8 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sm font-bold text-sky-200">
-            TS
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold tracking-tight">
-              TicketAgil
-            </span>
-            <span className="text-xs text-slate-400">
-              Copilot de soporte
-            </span>
-          </div>
+    <div className="min-h-screen md:grid md:grid-cols-[260px_1fr]">
+      <aside className="surface m-3 hidden md:flex md:flex-col md:overflow-hidden">
+        <div className="border-b px-6 py-5">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted">TicketAgil</p>
+          <p className="mt-1 text-lg font-semibold">Operations Console</p>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 space-y-1.5 p-3">
           {navItems.map((item) => (
             <button
               key={item.href}
               onClick={() => router.push(item.href)}
               className={[
-                'w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition',
+                'w-full rounded-xl px-3 py-2.5 text-left text-sm transition',
                 isActive(item.href)
-                  ? 'bg-sky-500/15 text-sky-100 border border-sky-500/50'
-                  : 'text-slate-300 hover:bg-slate-800/70 hover:text-slate-50',
+                  ? 'bg-foreground text-background-elevated'
+                  : 'text-muted hover:bg-background-subtle hover:text-foreground',
               ].join(' ')}
             >
-              <span className="truncate">{item.label}</span>
+              {item.label}
             </button>
           ))}
         </nav>
 
-        <div className="px-4 py-4 border-t border-slate-800 text-xs text-slate-500">
-          <p className="font-mono text-[11px]">v0.1.0 · MVP</p>
-          <p className="mt-1">
-            hecho con <span className="text-sky-400">Next + Supabase + IA</span>
-          </p>
+        <div className="border-t px-6 py-4 text-xs text-muted">
+          <p>Version 0.1.0</p>
+          <p className="mt-1">Panel de gestión de soporte</p>
         </div>
       </aside>
 
-      {/* MAIN */}
-      <div className="flex-1 flex flex-col">
-        {/* TOPBAR */}
-        <header className="h-14 border-b border-slate-800 px-4 flex items-center justify-between bg-slate-950/60 backdrop-blur">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs uppercase tracking-[0.18em] text-slate-400">
-              Soporte · Panel
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {userEmail && (
-              <div className="flex flex-col items-end">
-                <span className="text-xs text-slate-400">
-                  Conectado como
-                </span>
-                <span className="text-sm font-medium truncate max-w-[180px]">
-                  {userEmail}
-                </span>
+      <div className="flex min-h-screen flex-col">
+        <header className="mx-3 mt-3 rounded-2xl border bg-background-elevated/90 px-4 py-3 backdrop-blur md:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.2em] text-muted">Centro de soporte</p>
+              <div className="mt-2 flex flex-wrap gap-2 md:hidden">
+                {navItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => router.push(item.href)}
+                    className={[
+                      'rounded-lg border px-2.5 py-1 text-xs',
+                      isActive(item.href) ? 'bg-foreground text-background-elevated' : 'text-muted',
+                    ].join(' ')}
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </div>
-            )}
-            <button
-              onClick={handleLogout}
-              className="text-xs rounded-full border border-slate-700 px-3 py-1 hover:bg-slate-800 transition"
-            >
-              Cerrar sesión
-            </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {userEmail && (
+                <div className="text-right">
+                  <p className="text-xs text-muted">Sesión activa</p>
+                  <p className="max-w-[220px] truncate text-sm font-medium">{userEmail}</p>
+                </div>
+              )}
+              <button onClick={handleLogout} className="btn-secondary text-sm">
+                Cerrar sesión
+              </button>
+            </div>
           </div>
         </header>
 
-        {/* CONTENT */}
-        <main className="flex-1 bg-slate-950/90">
-          <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-8">
+        <main className="flex-1 p-3 md:p-4">
+          <div className="mx-auto w-full max-w-7xl">
             {loading ? (
-              <div className="flex h-[60vh] items-center justify-center text-slate-400">
-                <span className="h-4 w-4 rounded-full border-2 border-slate-600 border-t-transparent animate-spin mr-2" />
-                <span>Comprobando sesión...</span>
+              <div className="surface flex h-[60vh] items-center justify-center gap-2 text-muted">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Comprobando sesión...
               </div>
             ) : (
               children
