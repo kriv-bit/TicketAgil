@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/SupabaseClient'
+import MotionShell from '@/components/MotionShell'
 
 type AppLayoutProps = {
   children: ReactNode
@@ -131,7 +132,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 Comprobando sesión...
               </div>
             ) : (
-              children
+              <MotionShell className="motion-scope">{children}</MotionShell>
             )}
           </div>
         </main>
